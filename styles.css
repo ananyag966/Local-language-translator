@@ -1,0 +1,35 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 50px;
+    background-image: url('LLT-img.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+}
+.container {
+    background: #4682c1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    margin: auto;
+}
+button {
+    background: #1f1818;
+    color: #f4f1f1;
+    padding: 10px 15px;
+    margin: 10px;
+    cursor: pointer;
+}
+select {
+    padding: 5px;
+    margin: 10px;
+}
+h1{
+    font-weight: bolder;
+}
+  
+  
+  
