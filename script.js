@@ -5,34 +5,12 @@ const inputText = document.getElementById("input-text");
 const translatedText = document.getElementById("translated-text");
 const inputLanguageSelect = document.getElementById("input-language");
 const languageSelect = document.getElementById("language");
+const manualText = document.getElementById("manual-text");
 
 let speechRecognition;
 
 startBtn.addEventListener("click", () => {
     let inputLang = inputLanguageSelect.value;
-
-translateBtn.addEventListener("click", async () => {
-    let text = manualText.value.trim() || inputText.innerText;
-    let targetLang = languageSelect.value;
-
-    if (text && text !== "Listening... Please speak now.") {
-        let apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${inputLanguageSelect.value.split('-')[0]}|${targetLang}`;
-
-        try {
-            let response = await fetch(apiUrl);
-            let data = await response.json();
-            let translated = data.responseData.translatedText;
-            translatedText.innerText = translated;
-        } catch (error) {
-            translatedText.innerText = "Error in translation.";
-            console.error("Translation error:", error);
-        }
-    } else {
-        alert("Please enter or speak some text before translating.");
-    }
-});
-
-
 
     // Initialize Speech Recognition with selected input language
     speechRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -59,34 +37,6 @@ translateBtn.addEventListener("click", async () => {
 });
 
 translateBtn.addEventListener("click", async () => {
-    let text = inputText.innerText;
-    let targetLang = languageSelect.value;
-
-    if (text && text !== "Listening... Please speak now.") {
-        let apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${inputLanguageSelect.value.split('-')[0]}|${targetLang}`;
-
-        try {
-            let response = await fetch(apiUrl);
-            let data = await response.json();
-            let translated = data.responseData.translatedText;
-            translatedText.innerText = translated;
-        } catch (error) {
-            translatedText.innerText = "Error in translation.";
-            console.error("Translation error:", error);
-        }
-    } else {
-        alert("Please speak something before translating.");
-    }
-});
-
-speakBtn.addEventListener("click", () => {
-    let speech = new SpeechSynthesisUtterance(translatedText.innerText);
-    speech.lang = languageSelect.value;
-    window.speechSynthesis.speak(speech);
-});
-const manualText = document.getElementById("manual-text");
-
-translateBtn.addEventListener("click", async () => {
     let text = manualText.value.trim() || inputText.innerText;
     let targetLang = languageSelect.value;
 
@@ -104,5 +54,22 @@ translateBtn.addEventListener("click", async () => {
         }
     } else {
         alert("Please enter or speak some text before translating.");
+    }
+});
+
+const langMap = {
+    en: "en-US",
+    hi: "hi-IN",
+    te: "te-IN",
+    ta: "ta-IN",
+    kn: "kn-IN"
+};
+
+speakBtn.addEventListener("click", () => {
+    let text = translatedText.innerText.trim();
+    if (text) {
+        let speech = new SpeechSynthesisUtterance(text);
+        speech.lang = langMap[languageSelect.value] || "en-US";
+        window.speechSynthesis.speak(speech);
     }
 });
