@@ -11,6 +11,29 @@ let speechRecognition;
 startBtn.addEventListener("click", () => {
     let inputLang = inputLanguageSelect.value;
 
+translateBtn.addEventListener("click", async () => {
+    let text = manualText.value.trim() || inputText.innerText;
+    let targetLang = languageSelect.value;
+
+    if (text && text !== "Listening... Please speak now.") {
+        let apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${inputLanguageSelect.value.split('-')[0]}|${targetLang}`;
+
+        try {
+            let response = await fetch(apiUrl);
+            let data = await response.json();
+            let translated = data.responseData.translatedText;
+            translatedText.innerText = translated;
+        } catch (error) {
+            translatedText.innerText = "Error in translation.";
+            console.error("Translation error:", error);
+        }
+    } else {
+        alert("Please enter or speak some text before translating.");
+    }
+});
+
+
+
     // Initialize Speech Recognition with selected input language
     speechRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     speechRecognition.lang = inputLang;
@@ -61,4 +84,25 @@ speakBtn.addEventListener("click", () => {
     speech.lang = languageSelect.value;
     window.speechSynthesis.speak(speech);
 });
+const manualText = document.getElementById("manual-text");
 
+translateBtn.addEventListener("click", async () => {
+    let text = manualText.value.trim() || inputText.innerText;
+    let targetLang = languageSelect.value;
+
+    if (text && text !== "Listening... Please speak now.") {
+        let apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${inputLanguageSelect.value.split('-')[0]}|${targetLang}`;
+
+        try {
+            let response = await fetch(apiUrl);
+            let data = await response.json();
+            let translated = data.responseData.translatedText;
+            translatedText.innerText = translated;
+        } catch (error) {
+            translatedText.innerText = "Error in translation.";
+            console.error("Translation error:", error);
+        }
+    } else {
+        alert("Please enter or speak some text before translating.");
+    }
+});
