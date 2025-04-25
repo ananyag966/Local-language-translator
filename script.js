@@ -121,13 +121,13 @@ speakBtn.addEventListener("click", () => {
 
         if (!matchedVoice) {
             console.error(`No voice found for Hindi (hi-IN), falling back to English (en-US)`);
-            alert(`No voice found for Hindi. Falling back to English (en-US)`);
+            //alert(`No voice found for Hindi. Falling back to English (en-US)`);
             langCode = "en-US";  // Fallback to English if Hindi is not found
             matchedVoice = voices.find(voice => voice.lang === langCode);  // Try to find English voice
         }
 
         if (!matchedVoice) {
-            alert(`No voice found for fallback language: ${langCode}`);
+            //alert(`No voice found for fallback language: ${langCode}`);
             return;
         }
 
