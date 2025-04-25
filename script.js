@@ -72,13 +72,14 @@ speakBtn.addEventListener("click", () => {
     const langCode = langMap[languageSelect.value] || "en-US";
     const synth = window.speechSynthesis;
 
-    // Function to reload voices if necessary
+    // Function to handle loading and speaking with voices
     const loadVoices = () => {
         const voices = synth.getVoices();
         console.log("Available voices:", voices); // Log available voices in the console
 
         // If no voices, wait for voices to load
         if (voices.length === 0) {
+            console.log("No voices available yet. Waiting for voices to load.");
             synth.onvoiceschanged = () => {
                 const updatedVoices = synth.getVoices();
                 console.log("Updated voices:", updatedVoices);
@@ -95,12 +96,14 @@ speakBtn.addEventListener("click", () => {
 
         if (!matchedVoice) {
             console.error(`No voice found for language: ${langCode}`);
+            alert(`No voice found for language: ${langCode}`);
             return;
         }
 
         let speech = new SpeechSynthesisUtterance(text);
         speech.voice = matchedVoice;
         speech.lang = langCode;
+        console.log("Starting to speak with text:", text);
         synth.speak(speech);
     };
 
