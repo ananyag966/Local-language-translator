@@ -72,9 +72,13 @@ speakBtn.addEventListener("click", () => {
     const langCode = langMap[languageSelect.value] || "en-US";
     const synth = window.speechSynthesis;
 
+    // Function to speak the text
     const speakNow = () => {
         const voices = synth.getVoices();
+        console.log("Available voices:", voices); // Log available voices
+
         const matchedVoice = voices.find(voice => voice.lang === langCode);
+        console.log("Matched voice:", matchedVoice); // Log the matched voice (if any)
 
         let speech = new SpeechSynthesisUtterance(text);
         if (matchedVoice) {
@@ -84,9 +88,10 @@ speakBtn.addEventListener("click", () => {
         synth.speak(speech);
     };
 
+    // Check if voices are available
     if (synth.getVoices().length === 0) {
-        synth.onvoiceschanged = speakNow;
+        synth.onvoiceschanged = speakNow; // Voices are loaded now
     } else {
-        speakNow();
+        speakNow(); // Directly speak if voices are already available
     }
 });
