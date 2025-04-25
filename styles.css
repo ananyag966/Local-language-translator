@@ -30,6 +30,14 @@ select {
 h1{
     font-weight: bolder;
 }
-  
+ input[type="text"] {
+    padding: 10px;
+    width: 60%;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+
   
   
