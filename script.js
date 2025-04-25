@@ -67,9 +67,26 @@ const langMap = {
 
 speakBtn.addEventListener("click", () => {
     let text = translatedText.innerText.trim();
-    if (text) {
+    if (!text) return;
+
+    const langCode = langMap[languageSelect.value] || "en-US";
+    const synth = window.speechSynthesis;
+
+    const speakNow = () => {
+        const voices = synth.getVoices();
+        const matchedVoice = voices.find(voice => voice.lang === langCode);
+
         let speech = new SpeechSynthesisUtterance(text);
-        speech.lang = langMap[languageSelect.value] || "en-US";
-        window.speechSynthesis.speak(speech);
+        if (matchedVoice) {
+            speech.voice = matchedVoice;
+        }
+        speech.lang = langCode;
+        synth.speak(speech);
+    };
+
+    if (synth.getVoices().length === 0) {
+        synth.onvoiceschanged = speakNow;
+    } else {
+        speakNow();
     }
 });
