@@ -72,29 +72,38 @@ speakBtn.addEventListener("click", () => {
     const langCode = langMap[languageSelect.value] || "en-US";
     const synth = window.speechSynthesis;
 
-    // Ensure voices are available and log them
-    const voices = synth.getVoices();
-    console.log("Available voices:", voices); // Log available voices in the console
+    // Function to reload voices if necessary
+    const loadVoices = () => {
+        const voices = synth.getVoices();
+        console.log("Available voices:", voices); // Log available voices in the console
 
-    // Function to speak the text
-    const speakNow = () => {
-        const voices = synth.getVoices(); // Fetch the updated list of voices
-        console.log("Updated available voices:", voices); // Log available voices
+        // If no voices, wait for voices to load
+        if (voices.length === 0) {
+            synth.onvoiceschanged = () => {
+                const updatedVoices = synth.getVoices();
+                console.log("Updated voices:", updatedVoices);
+                speakNow(updatedVoices);
+            };
+        } else {
+            speakNow(voices); // If voices are available immediately, speak now
+        }
+    };
+
+    const speakNow = (voices) => {
         const matchedVoice = voices.find(voice => voice.lang === langCode);
         console.log("Matched voice:", matchedVoice); // Log the matched voice (if any)
 
-        let speech = new SpeechSynthesisUtterance(text);
-        if (matchedVoice) {
-            speech.voice = matchedVoice;
+        if (!matchedVoice) {
+            console.error(`No voice found for language: ${langCode}`);
+            return;
         }
+
+        let speech = new SpeechSynthesisUtterance(text);
+        speech.voice = matchedVoice;
         speech.lang = langCode;
         synth.speak(speech);
     };
 
-    // Check if voices are available, and if not, wait for them
-    if (voices.length === 0) {
-        synth.onvoiceschanged = speakNow; // Wait for voices to load
-    } else {
-        speakNow(); // Speak immediately if voices are available
-    }
+    // Ensure that voices are loaded and then speak
+    loadVoices();
 });
