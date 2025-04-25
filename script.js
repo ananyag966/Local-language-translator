@@ -72,27 +72,31 @@ speakBtn.addEventListener("click", () => {
     const langCode = langMap[languageSelect.value] || "en-US";
     const synth = window.speechSynthesis;
 
-    // Function to handle loading and speaking with voices
+    console.log(`Selected language code: ${langCode}`);
+    console.log("Available voices:", synth.getVoices()); // Log available voices
+
+    // Ensure voices are available before proceeding
     const loadVoices = () => {
         const voices = synth.getVoices();
-        console.log("Available voices:", voices); // Log available voices in the console
+        console.log("Loaded voices:", voices);  // Log all loaded voices
 
-        // If no voices, wait for voices to load
+        // If voices are not yet available, wait for them to load
         if (voices.length === 0) {
-            console.log("No voices available yet. Waiting for voices to load.");
+            console.log("No voices available, waiting...");
             synth.onvoiceschanged = () => {
                 const updatedVoices = synth.getVoices();
                 console.log("Updated voices:", updatedVoices);
                 speakNow(updatedVoices);
             };
         } else {
-            speakNow(voices); // If voices are available immediately, speak now
+            speakNow(voices);  // Speak now if voices are available
         }
     };
 
+    // Function to handle the speaking process
     const speakNow = (voices) => {
         const matchedVoice = voices.find(voice => voice.lang === langCode);
-        console.log("Matched voice:", matchedVoice); // Log the matched voice (if any)
+        console.log("Matched voice:", matchedVoice);  // Log the matched voice
 
         if (!matchedVoice) {
             console.error(`No voice found for language: ${langCode}`);
@@ -103,7 +107,7 @@ speakBtn.addEventListener("click", () => {
         let speech = new SpeechSynthesisUtterance(text);
         speech.voice = matchedVoice;
         speech.lang = langCode;
-        console.log("Starting to speak with text:", text);
+        console.log("Speaking the translated text:", text);
         synth.speak(speech);
     };
 
