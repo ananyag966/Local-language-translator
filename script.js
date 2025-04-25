@@ -65,11 +65,24 @@ const langMap = {
     kn: "kn-IN"
 };
 
+// Function to list all available voices in the browser
+const listVoices = () => {
+    const voices = speechSynthesis.getVoices();
+    console.log("Available voices in your browser:");
+    voices.forEach((voice, index) => {
+        console.log(`${index + 1}: ${voice.name} - ${voice.lang}`);
+    });
+};
+
+// Call listVoices immediately after initializing speechSynthesis
+listVoices();
+
+// Speak Translation Button
 speakBtn.addEventListener("click", () => {
     let text = translatedText.innerText.trim();
     if (!text) return;
 
-    const langCode = langMap[languageSelect.value] || "en-US";
+    let langCode = langMap[languageSelect.value] || "en-US"; // Default to "en-US" if no matching code
     const synth = window.speechSynthesis;
 
     console.log(`Selected language code: ${langCode}`);
@@ -95,12 +108,19 @@ speakBtn.addEventListener("click", () => {
 
     // Function to handle the speaking process
     const speakNow = (voices) => {
-        const matchedVoice = voices.find(voice => voice.lang === langCode);
+        let matchedVoice = voices.find(voice => voice.lang === langCode);
         console.log("Matched voice:", matchedVoice);  // Log the matched voice
 
+        // If no voice is found, fall back to English
         if (!matchedVoice) {
             console.error(`No voice found for language: ${langCode}`);
-            alert(`No voice found for language: ${langCode}`);
+            alert(`No voice found for language: ${langCode}. Falling back to English (en-US)`);
+            langCode = "en-US";  // Fallback to English if no voice is found
+            matchedVoice = voices.find(voice => voice.lang === langCode);  // Try to find English voice
+        }
+
+        if (!matchedVoice) {
+            alert(`No voice found for fallback language: ${langCode}`);
             return;
         }
 
